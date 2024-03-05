@@ -16,6 +16,9 @@ on:
 permissions:
   contents: read
 
+env:
+  TEST_TAG: wake-on-lan
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,14 +43,23 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
     - name: Build Docker image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: .
-        push: false
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        load: true
+        tags: ${{ env.TEST_TAG }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Test application
       run: docker run --rm wake-on-lan python -m unittest
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
       
