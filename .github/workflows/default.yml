@@ -49,5 +49,5 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Test application
-      run: docker run --rm daamian3/wake-on-lan:latest python -m unittest
+      run: docker run --rm wake-on-lan python -m unittest
       
